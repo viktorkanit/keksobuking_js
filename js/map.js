@@ -41,11 +41,11 @@ var MOCK = {
 		'location': {
 			'x': {
 				'min': 10,
-				'max': 1200
+				'max': 900
 			},
 			'y': {
 				'min': 130,
-				'max': 630
+				'max': 550
 			}
 		}
 
@@ -109,10 +109,26 @@ var object = function(obj) {
 		arr.push(newObject)
 		
 	}
-	console.log(arr)
+	return arr
 }
 
-object(MOCK)
+var newArr = object(MOCK);
+var pinTempleate = document.querySelector('#pin').content.querySelector('.map__pin');
+
+var fragmentPin = document.createDocumentFragment();
+for(i = 0; i < newArr.length; i++) {
+	var pinElement = pinTempleate.cloneNode(true);
+	pinElement.style = 'left: ' + newArr[i].location.x + 'px; ' + 'top:' + newArr[i].location.y + 'px;';
+	pinElement.querySelector()
+	fragmentPin.appendChild(pinElement);
+}
+
+document.querySelector('.map').appendChild(fragmentPin);
+
+
+
+
+
 
 
 
