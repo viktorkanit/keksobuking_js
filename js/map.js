@@ -80,7 +80,7 @@ var object = function(obj) {
 	for (var i = 0; i < COUNT_OBJECT; i++) {
 		var newObject = {
 			'author': {
-				'avatar': 'img/avatars/user0' + random(0, obj.author.avatar.length) + '.png'
+				'avatar': 'img/avatars/user0' + obj.author.avatar[i] + '.png'
 			},
 			'offer': {
 				'title': randArrElement(obj.offer.title),
@@ -119,7 +119,7 @@ var fragmentPin = document.createDocumentFragment();
 for(i = 0; i < newArr.length; i++) {
 	var pinElement = pinTempleate.cloneNode(true);
 	pinElement.style = 'left: ' + newArr[i].location.x + 'px; ' + 'top:' + newArr[i].location.y + 'px;';
-	pinElement.querySelector()
+	pinElement.querySelector('img').src = newArr[i].author.avatar
 	fragmentPin.appendChild(pinElement);
 }
 
