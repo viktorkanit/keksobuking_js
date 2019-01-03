@@ -1,3 +1,4 @@
+var pinTempleate = document.querySelector('#pin').content.querySelector('.map__pin');
 var MOCK = {
 		'author': {
 			'avatar': [1, 2, 3, 4, 5, 6, 7, 8]
@@ -40,7 +41,7 @@ var MOCK = {
 		},
 		'location': {
 			'x': {
-				'min': 10,
+				'min': 100,
 				'max': 900
 			},
 			'y': {
@@ -113,17 +114,50 @@ var object = function(obj) {
 }
 
 var newArr = object(MOCK);
-var pinTempleate = document.querySelector('#pin').content.querySelector('.map__pin');
 
+
+//Создаём пин
+var pinCreate = function(arr) {
+	var element = pinTempleate.cloneNode(true);
+	element.style = 'left: ' + arr.location.x + 'px; ' + 'top:' + arr.location.y + 'px;';
+	element.querySelector('img').src = arr.author.avatar
+
+	return element
+}
+//Рендерим наши пины через фрагмент
 var fragmentPin = document.createDocumentFragment();
-for(i = 0; i < newArr.length; i++) {
-	var pinElement = pinTempleate.cloneNode(true);
-	pinElement.style = 'left: ' + newArr[i].location.x + 'px; ' + 'top:' + newArr[i].location.y + 'px;';
-	pinElement.querySelector('img').src = newArr[i].author.avatar
-	fragmentPin.appendChild(pinElement);
+for (var i = 0; i < newArr.length; i++) {
+	fragmentPin.appendChild(pinCreate(newArr[i]));
+}
+var cardTempleate = document.querySelector('#card').content.querySelector('.map__card');
+var mapListCard = document.querySelector('.map');
+
+//Создаём карточку объявления
+var cardCreate = function(arr) {
+	var card = cardTempleate.cloneNode(true);
+	card.querySelector('.popup__title').textContent = arr.offer.title;
+	card.querySelector('.popup__text--address').textContent = arr.offer.address.location.x + ', ' + arr.offer.address.location.y;
+	card.querySelector('.popup__text--price').textContent = arr.offer.price + '₽/ночь';
+	card.querySelector('.popup__type').textContent = arr.offer.type;
+	card.querySelector('.popup__text--capacity').textContent = arr.offer.rooms + ' комнаты для ' + arr.offer.guest;
+	card.querySelector('.popup__text--time').textContent = 'Заезд после ' + arr.offer.checkin + ', выезд до ' + arr.offer.checkout;
+	card.querySelector('.popup__features').textContent = arr.offer.features;
+	card.querySelector('.popup__description').textContent = arr.offer.description;
+	//закончить вывод
+	return card
 }
 
-document.querySelector('.map').appendChild(fragmentPin);
+
+
+var fragmentCard = document.createDocumentFragment();
+for (var i = 0; i < newArr.length; i++) {
+	fragmentCard.appendChild(cardCreate(newArr[i]));
+}
+	
+	mapListCard.insertBefore(fragmentCard, mapListCard.querySelector('.map__filters-container'))
+
+
+document.querySelector('.map__pins').appendChild(fragmentPin);
 
 
 
