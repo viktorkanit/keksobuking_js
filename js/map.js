@@ -1,4 +1,7 @@
 var pinTempleate = document.querySelector('#pin').content.querySelector('.map__pin');
+var cardTempleate = document.querySelector('#card').content.querySelector('.map__card');
+var mapListCard = document.querySelector('.map');
+
 var MOCK = {
 		'author': {
 			'avatar': [1, 2, 3, 4, 5, 6, 7, 8]
@@ -99,7 +102,7 @@ var object = function(obj) {
 				'checkout': randArrElement(obj.offer.checkout),
 				'features': randomLength(obj.offer.features),
 				'description': '',
-				'photos': obj.offer.photos.sort(compareRandom),
+				'photos': obj.offer.photos,
 			},
 			'location': {
 				'x': random(obj.location.x.min, obj.location.x.max),
@@ -129,34 +132,6 @@ var fragmentPin = document.createDocumentFragment();
 for (var i = 0; i < newArr.length; i++) {
 	fragmentPin.appendChild(pinCreate(newArr[i]));
 }
-var cardTempleate = document.querySelector('#card').content.querySelector('.map__card');
-var mapListCard = document.querySelector('.map');
-
-//Создаём карточку объявления
-var cardCreate = function(arr) {
-	var card = cardTempleate.cloneNode(true);
-	card.querySelector('.popup__title').textContent = arr.offer.title;
-	card.querySelector('.popup__text--address').textContent = arr.offer.address.location.x + ', ' + arr.offer.address.location.y;
-	card.querySelector('.popup__text--price').textContent = arr.offer.price + '₽/ночь';
-	card.querySelector('.popup__type').textContent = arr.offer.type;
-	card.querySelector('.popup__text--capacity').textContent = arr.offer.rooms + ' комнаты для ' + arr.offer.guest;
-	card.querySelector('.popup__text--time').textContent = 'Заезд после ' + arr.offer.checkin + ', выезд до ' + arr.offer.checkout;
-	card.querySelector('.popup__features').textContent = arr.offer.features;
-	card.querySelector('.popup__description').textContent = arr.offer.description;
-	//закончить вывод
-	return card
-}
-
-
-
-var fragmentCard = document.createDocumentFragment();
-for (var i = 0; i < newArr.length; i++) {
-	fragmentCard.appendChild(cardCreate(newArr[i]));
-}
-	
-	mapListCard.insertBefore(fragmentCard, mapListCard.querySelector('.map__filters-container'))
-
-
 document.querySelector('.map__pins').appendChild(fragmentPin);
 
 
@@ -164,6 +139,64 @@ document.querySelector('.map__pins').appendChild(fragmentPin);
 
 
 
+//Создаём карточку объявления
+var cardCreate = function(arr) {
+
+	var card = cardTempleate.cloneNode(true);
+	card.querySelector('.popup__title').textContent = arr.offer.title;
+	card.querySelector('.popup__text--address').textContent = arr.offer.address.location.x + ', ' + arr.offer.address.location.y;
+	card.querySelector('.popup__text--price').textContent = arr.offer.price + '₽/ночь';
+
+	var offerType = '';
+	if (arr.offer.type === 'bungalo') {
+		offerType = 'Бунгало'
+	}else if (arr.offer.type === 'flat') {
+		offerType = 'Квартира'
+	}else if (arr.offer.type === 'house') {
+		offerType = 'Дом'
+	}else if (arr.offer.type === 'palace') {
+		offerType = 'Дворец'
+	}
+
+	card.querySelector('.popup__type').textContent = offerType;
+	card.querySelector('.popup__text--capacity').textContent = arr.offer.rooms + ' комнаты для ' + arr.offer.guest;
+	card.querySelector('.popup__text--time').textContent = 'Заезд после ' + arr.offer.checkin + ', выезд до ' + arr.offer.checkout;
+
+	var arrFeatures = arr.offer.features;
+	var arrQueryFeatures = card.querySelectorAll('.popup__feature');
+	
+	for (var i = 0; i < arrQueryFeatures.length; i++) {
+		if(!arrFeatures[i]) {
+			arrQueryFeatures[i].remove();
+		}
+	}
+	card.querySelector('.popup__description').textContent = arr.offer.description;
+	
+	for (var i = 0; i < arr.offer.photos.length; i++) {
+		card.querySelector('.popup__photo').src = arr.offer.photos[i];
+		card.querySelector('.popup__photos').appendChild(card.querySelector('.popup__photo').cloneNode());
+	}
+	card.querySelector('.popup__photo').remove();
+	card.querySelector('.popup__avatar').src = arr.author.avatar;
+	//закончить вывод
+	return card
+}
 
 
+//Вставляем фрагмент (шаблон карточки)
+var fragmentCard = document.createDocumentFragment();
+for (var i = 0; i < newArr.length; i++) {
+	fragmentCard.appendChild(cardCreate(newArr[i]));
+}
+mapListCard.insertBefore(fragmentCard, mapListCard.querySelector('.map__filters-container'))
+
+
+
+
+
+
+
+
+
+//Открываем видимость карты(временное решение, пока нет)
 document.querySelector('.map').classList.remove('map--faded');
