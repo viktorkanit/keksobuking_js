@@ -130,7 +130,10 @@ var pinCreate = function(arr) {
 //Рендерим наши пины через фрагмент
 var fragmentPin = document.createDocumentFragment();
 for (var i = 0; i < newArr.length; i++) {
-	fragmentPin.appendChild(pinCreate(newArr[i]));
+	var pinElem = pinCreate(newArr[i]);
+	pinElem.setAttribute('data-card', i);
+	pinElem.classList.add('my__hide');
+	fragmentPin.appendChild(pinElem);
 }
 
 
@@ -186,10 +189,15 @@ var cardCreate = function(arr) {
 //Вставляем фрагмент (шаблон карточки)
 var fragmentCard = document.createDocumentFragment();
 for (var i = 0; i < newArr.length; i++) {
-	fragmentCard.appendChild(cardCreate(newArr[i]));
+	var cardElem = cardCreate(newArr[i]);
+	cardElem.setAttribute('data-card', i);
+	cardElem.classList.add('my__hide');
+	
+	fragmentCard.appendChild(cardElem);
 
 }
 
+mapListCard.appendChild(fragmentCard)
 
 
 
@@ -210,19 +218,39 @@ var pinPosition = function(pin) {
 	return pin.style.left + ' ' + pin.style.top;
 }
 
+//Вставляем фрагменты
 
+document.querySelector('.map__pins').appendChild(fragmentPin);
+var pinsElems = document.querySelectorAll('.map__pin.my__hide');
+//Событие клика
 document.querySelector('.map__pin--main').addEventListener('mouseup', function() {
 	document.querySelector('.map').classList.remove('map--faded');
 	document.querySelector('.ad-form').classList.remove('ad-form--disabled');
-	document.querySelector('.map__pins').appendChild(fragmentPin);
-
-	mapListCard.insertBefore(fragmentCard, mapListCard.querySelector('.map__filters-container'))
-
-	for (var i = 0; i < fieldsOff.length; i++) {
-	fieldsOff[i].disabled = false;
+	
 
 	document.querySelector('input[name=address]').value = pinPosition(pinElement);
+	for (var i = 0; i < fieldsOff.length; i++) {
+	fieldsOff[i].disabled = false;
 }
+	
+ 	
+
+ 	for (var i = 0; i < pinsElems.length; i++) {
+ 		pinsElems[i].classList.remove('my__hide');
+ 	}
 
 })
+var cardElem = document.querySelectorAll('.map__card');
+
+
+for (var i = 0; i < pinsElems.length; i++) {
+	pinsElems[i].addEventListener('click', function() {
+		//console.log(this.getAttribute('data-card'))
+		var cardNum = this.getAttribute('data-card');
+		cardElem[cardNum].classList.remove('my__hide');
+		cardElem[cardNum].querySelector('.popup__close').addEventListener('click', function() {
+			cardElem[cardNum].classList.add('my__hide');
+		})
+	})
+}
 
