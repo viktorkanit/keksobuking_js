@@ -132,7 +132,7 @@ var fragmentPin = document.createDocumentFragment();
 for (var i = 0; i < newArr.length; i++) {
 	fragmentPin.appendChild(pinCreate(newArr[i]));
 }
-document.querySelector('.map__pins').appendChild(fragmentPin);
+
 
 
 
@@ -187,16 +187,42 @@ var cardCreate = function(arr) {
 var fragmentCard = document.createDocumentFragment();
 for (var i = 0; i < newArr.length; i++) {
 	fragmentCard.appendChild(cardCreate(newArr[i]));
+
 }
-mapListCard.insertBefore(fragmentCard, mapListCard.querySelector('.map__filters-container'))
-
-
-
-
 
 
 
 
 
 //Открываем видимость карты(временное решение, пока нет)
-document.querySelector('.map').classList.remove('map--faded');
+var fieldsOff = document.querySelectorAll('fieldset');
+
+for (var i = 0; i < fieldsOff.length; i++) {
+	fieldsOff[i].disabled = true;
+}
+
+var pinElement = document.querySelector('.map__pin');
+
+
+
+
+var pinPosition = function(pin) {
+	return pin.style.left + ' ' + pin.style.top;
+}
+
+
+document.querySelector('.map__pin--main').addEventListener('mouseup', function() {
+	document.querySelector('.map').classList.remove('map--faded');
+	document.querySelector('.ad-form').classList.remove('ad-form--disabled');
+	document.querySelector('.map__pins').appendChild(fragmentPin);
+
+	mapListCard.insertBefore(fragmentCard, mapListCard.querySelector('.map__filters-container'))
+
+	for (var i = 0; i < fieldsOff.length; i++) {
+	fieldsOff[i].disabled = false;
+
+	document.querySelector('input[name=address]').value = pinPosition(pinElement);
+}
+
+})
+
