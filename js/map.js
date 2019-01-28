@@ -2,6 +2,10 @@ var pinTempleate = document.querySelector('#pin').content.querySelector('.map__p
 var cardTempleate = document.querySelector('#card').content.querySelector('.map__card');
 var mapListCard = document.querySelector('.map');
 
+var cardelee = cardTempleate.cloneNode(true);
+
+mapListCard.appendChild(cardelee)
+
 var MOCK = {
 		'author': {
 			'avatar': [1, 2, 3, 4, 5, 6, 7, 8]
@@ -145,7 +149,7 @@ for (var i = 0; i < newArr.length; i++) {
 //Создаём карточку объявления
 var cardCreate = function(arr) {
 
-	var card = cardTempleate.cloneNode(true);
+	var card = document.querySelector('.map__card.popup');
 	card.querySelector('.popup__title').textContent = arr.offer.title;
 	card.querySelector('.popup__text--address').textContent = arr.offer.address.location.x + ', ' + arr.offer.address.location.y;
 	card.querySelector('.popup__text--price').textContent = arr.offer.price + '₽/ночь';
@@ -186,18 +190,7 @@ var cardCreate = function(arr) {
 }
 
 
-//Вставляем фрагмент (шаблон карточки)
-var fragmentCard = document.createDocumentFragment();
-for (var i = 0; i < newArr.length; i++) {
-	var cardElem = cardCreate(newArr[i]);
-	cardElem.setAttribute('data-card', i);
-	cardElem.classList.add('my__hide');
-	
-	fragmentCard.appendChild(cardElem);
 
-}
-
-mapListCard.appendChild(fragmentCard)
 
 
 
@@ -240,17 +233,22 @@ document.querySelector('.map__pin--main').addEventListener('mouseup', function()
  	}
 
 })
-var cardElem = document.querySelectorAll('.map__card');
 
+	var addClickAll = function(elem, iv) {
+		elem.addEventListener('click', function() {
+			var cardek = cardCreate(newArr[iv]);
+			
+
+		})
+	}
 
 for (var i = 0; i < pinsElems.length; i++) {
-	pinsElems[i].addEventListener('click', function() {
-		//console.log(this.getAttribute('data-card'))
-		var cardNum = this.getAttribute('data-card');
-		cardElem[cardNum].classList.remove('my__hide');
-		cardElem[cardNum].querySelector('.popup__close').addEventListener('click', function() {
-			cardElem[cardNum].classList.add('my__hide');
-		})
-	})
+	
+	addClickAll(pinsElems[i], i);	
+
+		
+
+		
+	
 }
 
